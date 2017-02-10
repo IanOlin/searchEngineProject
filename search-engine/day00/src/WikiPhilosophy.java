@@ -36,14 +36,16 @@ public class WikiPhilosophy {
 	 * @param limit: maximum number of clicks before we give up
 	 */
 	public static boolean testConjecture(String destination, String source, int limit) throws IOException {
-		// Right now, this method tries the first link on the page, and if it is the destination, it returns true
-		// TODO: fix this method.
-		// Loop until reach limit, get stuck in a loop, reach a page with no links, or reach the destination
 		Element elt = getFirstValidLink(source);
 		String url = elt.attr("abs:href");
-		if (url.equals(destination))
+		if (url.equals(destination)) {
 			return true;
-		return false;
+		}
+		if (limit > 1) {
+			return testConjecture(destination, url, limit-1);
+		} else {
+			return false;
+		}
 	}
 
 	/**
