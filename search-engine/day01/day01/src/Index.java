@@ -1,10 +1,9 @@
 import org.jsoup.select.Elements;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Transaction;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Index {
 
@@ -30,14 +29,20 @@ public class Index {
         return set;
     }
 
-    public void indexPage(String url, Elements paragraphs) {
+    public void indexPage(String url, Elements paragraphs) throws IOException {
         // make a TermCounter and count the terms in the paragraphs
+        Jedis jedis = JedisMaker.make();
+
         TermCounter counter = new TermCounter(url.toString());
         counter.processElements(paragraphs);
+        Transaction t = jedis.multi();
 
         // for each term in the TermCounter, add the TermCounter to the index
         for( String term: counter.keySet()){
             add(term, counter);
+            t.hset(url, term, counter.get(term).toString());
+            t.sadd("urlSet: " + term, url);
+            t.exec(); //maybe good to keep for debugging
         }
     }
 
