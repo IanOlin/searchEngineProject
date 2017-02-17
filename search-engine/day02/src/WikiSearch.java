@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,8 +16,10 @@ public class WikiSearch {
     }
 
     public Integer getRelevance(String url) {
-        // TODO
-        return null;
+        if (map.get(url) != null) {
+            return map.get(url);
+        }
+        return 0;
     }
 
     // Prints the contents in order of term frequency.
@@ -29,26 +32,46 @@ public class WikiSearch {
 
     // Computes the union of two search results.
     public WikiSearch or(WikiSearch that) {
-        // TODO
-        return null;
+        Map<String, Integer> unionMap = new HashMap<>();
+        for (String url : map.keySet()) {
+            unionMap.put(url, map.get(url));
+        }
+        for (String url : that.map.keySet()) {
+            Integer mapCount = map.get(url);
+            if (mapCount != null) {
+                unionMap.put(url, that.map.get(url) + mapCount);
+            } else {
+                unionMap.put(url, that.map.get(url));
+            }
+        }
+        return new WikiSearch(unionMap);
     }
 
     // Computes the intersection of two search results.
     public WikiSearch and(WikiSearch that) {
-        // TODO
-        return null;
+        Map<String, Integer> intersectionMap = new HashMap<>();
+        for (String url : map.keySet()) {
+            if (that.map.get(url) != null) {
+                intersectionMap.put(url, map.get(url) + that.map.get(url));
+            }
+        }
+        return new WikiSearch(intersectionMap);
     }
 
-    // Computes the intersection of two search results.
+    // Computes the difference of two search results.
     public WikiSearch minus(WikiSearch that) {
-        // TODO
-        return null;
+        Map<String, Integer> differenceMap = new HashMap<>();
+        for (String url : map.keySet()) {
+            if (that.map.get(url) == null) {
+                differenceMap.put(url, map.get(url));
+            }
+        }
+        return new WikiSearch(differenceMap);
     }
 
     // Computes the relevance of a search with multiple terms.
     protected int totalRelevance(Integer rel1, Integer rel2) {
-        // TODO
-        return 0;
+        return rel1 + rel2;
     }
 
     // Sort the results by relevance.

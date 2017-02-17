@@ -9,6 +9,15 @@ public class Index {
 
     // Index: map of words to URL and their counts
     private Map<String, Set<TermCounter>> index = new HashMap<String, Set<TermCounter>>();
+    private Jedis jedis;
+
+    public Index(Jedis jedis) {
+        this.jedis = jedis;
+    }
+
+    public Index() throws IOException {
+        this.jedis = JedisMaker.make();
+    }
 
     public void add(String term, TermCounter tc) {
         // if we're seeing a term for the first time, make a new Set
@@ -29,9 +38,8 @@ public class Index {
         return set;
     }
 
-    public void indexPage(String url, Elements paragraphs) throws IOException {
+    public void indexPage(String url, Elements paragraphs) {
         // make a TermCounter and count the terms in the paragraphs
-        Jedis jedis = JedisMaker.make();
 
         TermCounter counter = new TermCounter(url.toString());
         counter.processElements(paragraphs);
