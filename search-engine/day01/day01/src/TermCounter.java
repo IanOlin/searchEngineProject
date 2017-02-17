@@ -54,7 +54,6 @@ public class TermCounter {
             incrementTermCount(array[i]);
             size++;
         }
-
     }
 
     public void incrementTermCount(String term) {

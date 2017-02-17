@@ -42,8 +42,8 @@ public class Index {
             add(term, counter);
             t.hset(url, term, counter.get(term).toString());
             t.sadd("urlSet: " + term, url);
-            t.exec();
         }
+        t.exec();
     }
 
     public void printIndex() {

@@ -38,8 +38,11 @@ public class Crawler {
 			String url = queue.remove();
 			Elements paragraphs = wf.fetchWikipedia(url);
 			queueInternalLinks(paragraphs);
-			index.indexPage(url, paragraphs);
-			limit--;
+			if(index.get(url) == null) {
+				index.indexPage(url, paragraphs);
+				limit--;
+			}
+			else{}
 		}
 	}
 
@@ -73,11 +76,7 @@ public class Crawler {
 		Elements paragraphs = wf.fetchWikipedia(source);
 		wc.queueInternalLinks(paragraphs);
 
-		wc.crawl(20);
-
-        // TODO: Crawl outward starting at source
-
-		// TODO: Test that your index contains multiple pages.
+		wc.crawl(10);
 		// Here is some sample code that tests your index, which assumes
 		// you have written a getCounts() method in Index, which returns
 		// a map from {url: count} for a given keyword
