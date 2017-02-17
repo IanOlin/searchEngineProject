@@ -42,7 +42,7 @@ public class Index {
             add(term, counter);
             t.hset(url, term, counter.get(term).toString());
             t.sadd("urlSet: " + term, url);
-            t.exec(); //maybe good to keep for debugging
+            t.exec();
         }
     }
 
@@ -62,6 +62,16 @@ public class Index {
 
     public Set<String> keySet() {
         return index.keySet();
+    }
+
+    public Map<String, Integer> getCounts(String keyword) {
+        Map<String, Integer> counts = new HashMap<>();
+
+        Set<TermCounter> termcounters = get(keyword);
+        for (TermCounter t: termcounters) {
+            counts.put(t.getLabel(), t.get(keyword));
+        }
+        return counts;
     }
 
     public static void main(String[] args) throws IOException {

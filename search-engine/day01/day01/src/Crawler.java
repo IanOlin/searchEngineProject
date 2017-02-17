@@ -34,7 +34,13 @@ public class Crawler {
 	 * @throws IOException
 	 */
 	public void crawl(int limit) throws IOException {
-		// TODO
+		while ((queue.peek() != null) && (limit > 0)) {
+			String url = queue.remove();
+			Elements paragraphs = wf.fetchWikipedia(url);
+			queueInternalLinks(paragraphs);
+			index.indexPage(url, paragraphs);
+			limit--;
+		}
 	}
 
 	void queueInternalLinks(Elements paragraphs) {
@@ -67,16 +73,18 @@ public class Crawler {
 		Elements paragraphs = wf.fetchWikipedia(source);
 		wc.queueInternalLinks(paragraphs);
 
+		wc.crawl(20);
+
         // TODO: Crawl outward starting at source
 
 		// TODO: Test that your index contains multiple pages.
 		// Here is some sample code that tests your index, which assumes
 		// you have written a getCounts() method in Index, which returns
 		// a map from {url: count} for a given keyword
-		// Map<String, Integer> map = index.getCounts("programming");
-		// for (Map.Entry<String, Integer> entry: map.entrySet()) {
-		// 	System.out.println(entry);
-		// }
+		 Map<String, Integer> map = index.getCounts("programming");
+		 for (Map.Entry<String, Integer> entry: map.entrySet()) {
+		 	System.out.println(entry);
+		 }
 
 	}
 }
