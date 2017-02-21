@@ -73,11 +73,12 @@ public class Index {
     }
 
     public Map<String, Integer> getCounts(String keyword) {
-        Map<String, Integer> counts = new HashMap<>();
 
-        Set<TermCounter> termcounters = get(keyword);
-        for (TermCounter t: termcounters) {
-            counts.put(t.getLabel(), t.get(keyword));
+        Set<String> urls = jedis.smembers("urlSet: " + keyword);
+        Map<String, Integer> counts = new HashMap<>();
+        for (String url : urls) {
+            Map<String, String> termCounts = jedis.hgetAll(url);
+            counts.put(url, Integer.parseInt(termCounts.get(keyword)));
         }
         return counts;
     }

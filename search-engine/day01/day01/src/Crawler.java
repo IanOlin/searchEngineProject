@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Scanner;
 
 public class Crawler {
 	// the index where the results go
@@ -66,6 +67,7 @@ public class Crawler {
 	}
 
 	public static void main(String[] args) throws IOException {
+
 		// make a WikiCrawler
 		Jedis jedis = JedisMaker.make();
 		Index index = new Index();
