@@ -1,7 +1,6 @@
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.Collator;
+import java.util.*;
 import java.util.Map.Entry;
 
 import redis.clients.jedis.Jedis;
@@ -76,8 +75,13 @@ public class WikiSearch {
 
     // Sort the results by relevance.
     public List<Entry<String, Integer>> sort() {
-        // TODO
-        return null;
+        List res = new LinkedList<>(map.entrySet());
+        Collections.sort(res, new Comparator<Entry<String, Integer>>() {
+            public int compare(Entry<String, Integer> o1, Entry<String, Integer>  o2) {
+                return o1.getValue().compareTo(o2.getValue());
+            }
+        });
+        return res;
     }
 
 
